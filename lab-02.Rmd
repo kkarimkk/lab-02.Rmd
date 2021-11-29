@@ -1,0 +1,126 @@
+---
+title: "Lab 02 - Пластиковые отходы"
+author: "Карим"
+date: "28.11.2021"
+output: github_document
+---
+
+## Загружаем пакеты и данные
+
+```{r load-packages, message=FALSE}
+library(tidyverse) 
+```
+
+```{r load-data, message=FALSE}
+plastic_waste <- read_csv("data/plastic-waste.csv")
+```
+
+## Упражнения
+
+### Упражнение 1
+Отобразите с помощью гистограммы распределение пластиковых отходов на душу населения на панелях отдельно по континентам. Что можно сказать о том, как соотносятся континенты по количеству пластиковых отходов на душу населения?.
+
+```{r plastic-waste-continent}
+ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) +
+  geom_density()
+```
+
+```{r pplastic_waste }
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent)) +
+  geom_density()
+```
+```{r pplastic_waste }
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent, 
+                     fill = continent)) +
+  geom_density()
+```
+```{r pplastic_waste }
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent, 
+                     fill = continent)) +
+  geom_density(alpha = 0.7)
+```
+
+### Упражнение 2
+Пересоздайте графики плотности с использованием другого (меньшего) уровня прозрачности, который сработает лучше при отображении кривых плотности по всем континентам.
+
+```{r plastic-waste-density}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent, 
+                     fill = continent)) +
+  geom_density(alpha = 0.2)
+```
+
+### Упражнение 3
+
+Опишите, почему мы определили цвет color и заливку fill кривых путем установления соответствия с эстетиками графика, а уровень прозрачности alpha - как характеристику геометрического образа (geom).
+
+### Упражнение 4
+
+Преобразуйте параллельные диаграммы размаха из предыдущего задания в violin plots. Что отображается на скрипичных графиках, чего нельзя понять по диаграммам размаха? А какие особенности очевидны на диаграммах размаха, но не на скрипичных графиках?.
+
+```{r plastic-waste-violin}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = continent, 
+                     y = plastic_waste_per_cap)) +
+  geom_violin()
+```
+
+### Упражнение 5
+
+Визуализируйте зависимость между количеством пластиковых отходов на душу населения и количеством неправильно утилизированных пластиковых отходов на душу населения с помощью диаграммы рассеяния. Опишите эту зависимость..
+
+```{r plastic-waste-mismanaged}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = mismanaged_plastic_waste_per_cap)) +
+  geom_point()
+```
+
+### Упражнение 6
+
+Раскрасьте точки на графике в соответствии с континентами. Прослеживается ли какое-нибудь выраженное отличие между континентами в отношении того, как связаны общее количество и количество неправильно утилизированных пластиковых отходов на душу населения?.
+
+```{r plastic-waste-mismanaged-continent}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = mismanaged_plastic_waste_per_cap, color = continent)) +
+  geom_point()
+```
+
+### Упражнение 7
+
+Визуализируйте зависимость между количеством пластиковых отходов на душу населения и общей численностью населения, а также между количеством пластиковых отходов на душу населения и прибрежным населением. Вам нужно будет сделать два отдельных графика. Какая пара переменных обладает более выраженной линейной зависимостью?.
+
+```{r plastic-waste-population-total}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = total_pop, color = continent)) +
+  geom_point()
+```
+
+```{r plastic-waste-population-coastal}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = coastal_pop, color = continent)) +
+  geom_point()
+```
+
+### Упражнение 8
+
+Замените этот текст и добавьте ваш ответ на Упражнение 8.
+
+```{r recreate-viz}
+coastal_total <- c(plastic_waste$coastal_pop/plastic_waste$total_pop)
+```
+```{r recreate-viz}
+ggplot(data = plastic_waste) + 
+  geom_point(mapping = aes(x = coastal_total, y = plastic_waste_per_cap,color = continent)) +
+  geom_smooth(mapping = aes(x = coastal_total, y = plastic_waste_per_cap))
+```
